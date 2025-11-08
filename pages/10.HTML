@@ -1,0 +1,103 @@
+<!-- Template File: pages/1.html  (انسخها وكررها للصفحات 2 إلى 10 وعدّل الرقم فقط) --><!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Section 10 — Mate News</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: linear-gradient(180deg, #071428, #0b2540);
+      color: #eaf2ff;
+      padding: 20px;
+    }
+    header {
+      background: linear-gradient(90deg, #4aa3ff, #7c5cff);
+      padding: 14px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+    }
+    main {
+      max-width: 900px;
+      margin: 30px auto;
+      background: rgba(255,255,255,0.05);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    h2 {
+      font-size: 24px;
+      color: #dbeaff;
+      margin-top: 0;
+      text-align: center;
+    }
+    .section-image {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .section-image img {
+      max-width: 90%;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      border: 2px solid rgba(255,255,255,0.1);
+    }
+    p {
+      line-height: 1.7;
+      font-size: 15px;
+      color: #c9d8ef;
+      text-align: justify;
+    }
+    a.back {
+      display: inline-block;
+      margin-top: 20px;
+      color: #a0cfff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    a.back:hover {
+      text-decoration: underline;
+    }
+  </style>
+  
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4406680234402951"
+     crossorigin="anonymous"></script>
+  
+</head>
+<body>
+  <header><h1 data-i18n="siteTitle">Mate News</h1></header>  <main>
+    <h2 data-i18n="sectionTitle">Section 10</h2><!-- مكان الصورة -->
+<div class="section-image">
+  <img src="images2/S10.png" alt="Section 10 image" onerror="this.style.opacity='0.4'">
+</div>
+
+<p>هذا هو محتوى القسم الأول. يمكنك هنا كتابة النص أو المقال الخاص بهذا القسم أو إضافة وصف للصورة أعلاه.</p>
+
+<p><a href="../index.html" class="back" data-i18n="back">← Back to home</a></p>
+
+  </main>  <script>
+    // مترجم بسيط لتطبيق اللغة المختارة
+    const TRANSLATIONS = {
+      en: {siteTitle:'Mate News', sectionTitle:'Section 10', back:'← Back to home'},
+      es: {siteTitle:'Mate News', sectionTitle:'Sección 10', back:'← Volver al inicio'},
+      ar: {siteTitle:'Mate News', sectionTitle:'القسم 10', back:'← العودة إلى الصفحة الرئيسية'}
+    };
+    const lang = localStorage.getItem('pp_site_lang') || 'en';
+    const dict = TRANSLATIONS[lang] || TRANSLATIONS.en;
+    document.querySelectorAll('[data-i18n]').forEach(el=>{
+      const key = el.getAttribute('data-i18n');
+      if(dict[key]) el.textContent = dict[key];
+    });
+    if(lang === 'ar') document.documentElement.dir = 'rtl';
+  </script></body>
+</html>

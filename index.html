@@ -1,0 +1,412 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>
+    
+    Mate News
+  </title>
+
+  <!-- Optional font (works if online) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg-1: #071428;
+      --bg-2: #0b2540;
+      --card: #ffffff;
+      --muted: #6b7785;
+      --accent-1: #4aa3ff;
+      --accent-2: #7c5cff;
+      --glass: rgba(255,255,255,0.04);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+    body{
+      background: linear-gradient(180deg,var(--bg-1),var(--bg-2));
+      color:#eaf2ff;
+      padding:18px;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    .wrap{max-width:1100px;margin:0 auto}
+
+    /* Header */
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:14px;border-radius:14px;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));
+      box-shadow:0 12px 40px rgba(6,12,24,0.45);
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand img{width:60px;height:60px;border-radius:12px;object-fit:cover;border:2px solid rgba(255,255,255,0.12)}
+    .brand h1{margin:0;font-size:20px;font-weight:800;color:#fff}
+
+    .controls{display:flex;align-items:center;gap:8px}
+    .btn{
+      appearance:none;border:0;padding:10px 14px;border-radius:10px;font-weight:700;
+      cursor:pointer;background:rgba(255,255,255,0.14);color:#fff;backdrop-filter:blur(4px)
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn.icon{padding:8px 10px;border-radius:10px;font-size:16px}
+
+    /* drawer & overlay */
+    .overlay{position:fixed;inset:0;background:rgba(2,6,23,0.55);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .24s;z-index:60}
+    .overlay.open{opacity:1;pointer-events:auto}
+    .drawer{
+      position:fixed;right:-360px;top:0;height:100%;width:360px;background:linear-gradient(180deg,#021026,#061526);
+      color:#eaf6ff;padding:18px;border-left:1px solid rgba(255,255,255,0.03);box-shadow:-20px 0 60px rgba(0,0,0,0.6);transition:right .32s;z-index:70;
+    }
+    .drawer.open{right:0}
+    .drawer .close{position:absolute;left:12px;top:12px;background:transparent;border:0;color:inherit;font-size:20px;cursor:pointer}
+    .drawer h3{margin:8px 0 12px 0}
+    .drawer a{display:block;padding:10px;border-radius:10px;text-decoration:none;color:inherit;background:rgba(255,255,255,0.02);margin:8px 0}
+    .drawer .section{margin-top:18px;border-top:1px solid rgba(255,255,255,0.03);padding-top:12px}
+
+    /* language chooser */
+    .lang-area{display:flex;justify-content:center;margin:18px 0}
+    .lang-selector{min-width:240px;padding:12px;border-radius:12px;background:var(--glass);border:1px solid rgba(255,255,255,0.04);display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+    .lang-list{display:none;margin-top:10px;display:flex;justify-content:center;gap:8px}
+    .lang-list button{padding:8px 12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#fff;cursor:pointer}
+
+    /* latest */
+    .latest{margin:8px 0 18px;padding:12px;border-radius:12px;background:linear-gradient(90deg,rgba(255,255,255,0.02),transparent);font-weight:800;color:#dbeeff}
+
+    /* cards grid */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .card{
+      display:flex;gap:12px;align-items:center;padding:12px;background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01));
+      border-radius:12px;box-shadow:0 12px 30px rgba(2,6,23,0.28);cursor:pointer;text-decoration:none;color:inherit;transition:transform .25s,box-shadow .25s;
+    }
+    .card:hover{transform:translateY(-8px);box-shadow:0 24px 48px rgba(2,6,23,0.36)}
+    .card img{width:76px;height:76px;border-radius:10px;object-fit:cover;flex:0 0 76px}
+    .meta h4{margin:0;font-size:16px;font-weight:800;color:#eaf6ff}
+    .meta p{margin:6px 0 0 0;color:var(--muted);font-size:13px}
+
+    .center{display:flex;justify-content:center;margin:18px 0;gap:12px}
+    .primary{padding:10px 18px;border-radius:12px;border:0;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));font-weight:800;color:#fff;cursor:pointer;box-shadow:0 12px 30px rgba(2,6,23,0.28)}
+    .ad{padding:10px 18px;border-radius:12px;border:0;background:linear-gradient(90deg,#28a745,#1f8a2d);font-weight:800;color:#fff;cursor:pointer;box-shadow:0 12px 30px rgba(2,6,23,0.28)}
+
+    footer{margin-top:22px;text-align:center;color:#bcd6ea;padding:12px;font-size:14px}
+
+    /* responsive */
+    @media(max-width:720px){
+      .drawer{width:92%}
+      .brand h1{font-size:18px}
+    }
+  </style>
+  
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4406680234402951"
+     crossorigin="anonymous"></script>
+  
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- top bar -->
+    <header class="topbar" role="banner">
+      <div class="brand">
+        <!-- file: images/1 (use correct extension when you add the file) -->
+        <img src="images/1.png" alt="logo" onerror="this.style.opacity=0.5">
+        <h1 data-i18n="siteTitle">Mate News</h1>
+      </div>
+
+      <div class="controls" role="navigation" aria-label="top controls">
+        <button class="btn icon" id="openDrawer" aria-expanded="false" aria-controls="drawer">☰</button>
+      </div>
+    </header>
+
+    <!-- language -->
+    <div class="lang-area" aria-hidden="false">
+      <div>
+        <div id="langSelector" class="lang-selector" aria-haspopup="true" aria-expanded="false">
+          <span id="langCurrent">English</span><span>▾</span>
+        </div>
+        <div id="langList" class="lang-list" role="menu" aria-hidden="true">
+          <button data-lang="en">English</button>
+          <button data-lang="es">Español</button>
+          <button data-lang="ar">العربية</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- latest -->
+    <div class="latest" id="latestTitle" data-i18n="latestNews">Latest News</div>
+
+    <!-- cards (top) -->
+    <div class="grid" id="grid">
+      <a class="card" href="pages/1.html">
+        <img src="pages/images2/S1.png" alt="S1" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2276%22 height=%2276%22><rect width=%2276%22 height=%2276%22 fill=%22%23dfeaff%22/></svg>'">
+        <div class="meta"><h4>
+          
+          Learn about the story of the Sudan war
+          
+        </h4><p data-i18n="openSection">
+          Open section 1</p></div>
+      </a>
+
+      <a class="card" href="pages/2.html">
+        <img src="pages/images2/S2.png" alt="S2" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2276%22 height=%2276%22><rect width=%2276%22 height=%2276%22 fill=%22%23dfeaff%22/></svg>'">
+        <div class="meta"><h4>
+          
+          What is happening in Nigeria?
+          
+        </h4><p data-i18n="openSection">Open section 2</p></div>
+      </a>
+
+      <a class="card" href="pages/3.html">
+        <img src="pages/images2/S3.png" alt="S3" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2276%22 height=%2276%22><rect width=%2276%22 height=%2276%22 fill=%22%23dfeaff%22/></svg>'">
+        <div class="meta"><h4>
+          
+          are we going see a war between Morocco and Algeria 
+          
+        </h4><p data-i18n="openSection">Open section 3</p></div>
+      </a>
+
+      <a class="card" href="pages/4.html">
+        <img src="pages/images2/S4.png" alt="S4" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2276%22 height=%2276%22><rect width=%2276%22 height=%2276%22 fill=%22%23dfeaff%22/></svg>'">
+        <div class="meta"><h4>
+          
+          
+          Latest developments in the war in Palestine and Israel
+          
+          
+        </h4><p data-i18n="openSection">Open section 4</p></div>
+      </a>
+
+      <a class="card" href="pages/5.html">
+        <img src="pages/images2/S5.png" alt="S5" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2276%22 height=%2276%22><rect width=%2276%22 height=%2276%22 fill=%22%23dfeaff%22/></svg>'">
+        <div class="meta"><h4>هل سيقبل زياش دعوة الرگراگي</h4><p data-i18n="openSection">Open section 5</p></div>
+      </a>
+
+      <a class="card" href="pages/6.html">
+        <img src="pages/images2/S6.png" alt="S6" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2276%22 height=%2276%22><rect width=%2276%22 height=%2276%22 fill=%22%23dfeaff%22/></svg>'">
+        <div class="meta"><h4>66666</h4><p data-i18n="openSection">Open section 6</p></div>
+      </a>
+
+      <a class="card" href="pages/7.html">
+        <img src="pages/images2/S7.png" alt="S7" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2276%22 height=%2276%22><rect width=%2276%22 height=%2276%22 fill=%22%23dfeaff%22/></svg>'">
+        <div class="meta"><h4>77777</h4><p data-i18n="openSection">Open section 7</p></div>
+      </a>
+
+      <a class="card" href="pages/8.html">
+        <img src="pages/images2/S8.png" alt="S8" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2276%22 height=%2276%22><rect width=%2276%22 height=%2276%22 fill=%22%23dfeaff%22/></svg>'">
+        <div class="meta"><h4>88888</h4><p data-i18n="openSection">Open section 8</p></div>
+      </a>
+
+      <a class="card" href="pages/9.html">
+        <img src="pages/images2/S9.png" alt="S9" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2276%22 height=%2276%22><rect width=%2276%22 height=%2276%22 fill=%22%23dfeaff%22/></svg>'">
+        <div class="meta"><h4>99999</h4><p data-i18n="openSection">Open section 9</p></div>
+      </a>
+
+      <a class="card" href="pages/10.html">
+        <img src="pages/images2/S10.png" alt="S10" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2276%22 height=%2276%22><rect width=%2276%22 height=%2276%22 fill=%22%23dfeaff%22/></svg>'">
+        <div class="meta"><h4>1010101010</h4><p data-i18n="openSection">Open section 10</p></div>
+      </a>
+    </div>
+
+    <!-- controls -->
+    <div class="center">
+      <button class="primary" id="showMoreBtn" data-i18n="showMore">Show more</button>
+      <button class="ad" id="adBtn" data-i18n="watchAd">Watch ad to support us</button>
+    </div>
+
+    <footer id="siteFooter" data-i18n="footer">Site created by Mate News. All rights reserved.</footer>
+
+  </div> <!-- /wrap -->
+
+  <!-- drawer & overlay (cover whole window) -->
+  <div id="overlay" class="overlay" tabindex="-1" aria-hidden="true"></div>
+
+  <aside id="drawer" class="drawer" role="dialog" aria-modal="true" aria-hidden="true">
+    <button class="close" id="drawerClose" aria-label="Close">✕</button>
+
+    <!-- Follow labels: keep these in English as requested -->
+    <h3>Follow us</h3>
+    <a href="https://www.facebook.com/share/1CjiGFc9rr/" target="_blank" rel="noopener">Follow us on Facebook</a>
+    <a href="https://www.facebook.com/share/16LP4YEXoF/" target="_blank" rel="noopener">Follow us on sport mate</a>
+
+    <div class="section">
+      <div style="font-weight:700;margin-top:12px">Connect</div>
+      <a href="#" style="display:inline-block;margin:8px 6px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.02);text-decoration:none;color:inherit">Newsletter</a>
+      <a href="#" style="display:inline-block;margin:8px 6px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.02);text-decoration:none;color:inherit">Volunteer</a>
+    </div>
+  </aside>
+
+  <script>
+    /* -------- translations -------- */
+    const TRANSLATIONS = {
+      en: {
+        siteTitle: 'Mate News',
+        latestNews: 'Latest News',
+        openSection: 'Open section',
+        showMore: 'Show more',
+        watchAd: 'Watch ad to support us',
+        footer: 'The Facebook page United Voices created this website. All rights reserved.',
+        langLabel: 'English'
+      },
+      es: {
+        siteTitle: 'Mate News',
+        latestNews: 'Últimas noticias',
+        openSection: 'Abrir sección',
+        showMore: 'Mostrar más',
+        watchAd: 'Ver anuncio para apoyarnos',
+        footer: 'La página de Facebook Voces United Voices este sitio web. Todos los derechos reservados.',
+        langLabel: 'Español'
+      },
+      ar: {
+        siteTitle: 'Mate News',
+        latestNews: 'آخر الأخبار',
+        openSection: 'افتح القسم',
+        showMore: 'عرض المزيد',
+        watchAd: 'شاهد إعلانًا لدعمنا',
+        footer: 'أنشئ الموقع من طرف صفحة الفيسبوك sport mate. وكل الحقوق محفوض لها .',
+        langLabel: 'العربية'
+      }
+    };
+
+    // Elements
+    const openDrawerBtn = document.getElementById('openDrawer');
+    const drawer = document.getElementById('drawer');
+    const overlay = document.getElementById('overlay');
+    const drawerClose = document.getElementById('drawerClose');
+
+    const langSelector = document.getElementById('langSelector');
+    const langList = document.getElementById('langList');
+    const langCurrent = document.getElementById('langCurrent');
+
+    const latestTitle = document.getElementById('latestTitle');
+    const grid = document.getElementById('grid');
+    const showMoreBtn = document.getElementById('showMoreBtn');
+    const adBtn = document.getElementById('adBtn');
+    const siteFooter = document.getElementById('siteFooter');
+    const siteTitleEls = document.querySelectorAll('[data-i18n="siteTitle"]');
+    const openSectionEls = document.querySelectorAll('[data-i18n="openSection"]');
+
+    // open/close drawer
+    function openDrawer(){
+      drawer.classList.add('open');
+      overlay.classList.add('open');
+      drawer.setAttribute('aria-hidden','false');
+      overlay.setAttribute('aria-hidden','false');
+      openDrawerBtn.setAttribute('aria-expanded','true');
+    }
+    function closeDrawer(){
+      drawer.classList.remove('open');
+      overlay.classList.remove('open');
+      drawer.setAttribute('aria-hidden','true');
+      overlay.setAttribute('aria-hidden','true');
+      openDrawerBtn.setAttribute('aria-expanded','false');
+    }
+
+    openDrawerBtn.addEventListener('click', openDrawer);
+    drawerClose.addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+
+    // keyboard: Esc to close
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape'){
+        closeDrawer();
+        hideLangList();
+      }
+    });
+
+    // language selector interactions
+    langSelector.addEventListener('click', (e)=>{
+      const open = langList.style.display === 'flex';
+      if(open) hideLangList(); else showLangList();
+    });
+
+    function showLangList(){
+      langList.style.display = 'flex';
+      langSelector.setAttribute('aria-expanded','true');
+      langList.setAttribute('aria-hidden','false');
+    }
+    function hideLangList(){
+      langList.style.display = 'none';
+      langSelector.setAttribute('aria-expanded','false');
+      langList.setAttribute('aria-hidden','true');
+    }
+
+    // When user picks a language: apply translations and persist
+    langList.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const lang = btn.getAttribute('data-lang');
+        localStorage.setItem('pp_site_lang', lang);
+        applyLanguage(lang);
+        hideLangList();
+      });
+    });
+
+    // Apply translations function
+    function applyLanguage(lang){
+      const dict = TRANSLATIONS[lang] || TRANSLATIONS.en;
+      // title(s)
+      document.querySelectorAll('[data-i18n="siteTitle"]').forEach(el=>{
+        el.textContent = dict.siteTitle;
+      });
+      // header brand (one element)
+      // latest
+      latestTitle.textContent = dict.latestNews;
+      // card open lines
+      openSectionEls.forEach((el, idx) => {
+        // each card shows "Open section N" — keep the index
+        const parent = el.closest('.card');
+        if(parent){
+          // parse href to get section number
+          const href = parent.getAttribute('href') || '';
+          const match = href.match(/(\\d+)\\.html$/);
+          const n = match ? match[1] : (idx+1);
+          el.textContent = `${dict.openSection} ${n}`;
+        } else {
+          el.textContent = dict.openSection;
+        }
+      });
+      // buttons
+      showMoreBtn.textContent = dict.showMore;
+      adBtn.textContent = dict.watchAd;
+      // footer
+      siteFooter.textContent = dict.footer;
+      // current language label
+      langCurrent.textContent = dict.langLabel;
+      // document direction for Arabic
+      if(lang === 'ar') document.documentElement.dir = 'rtl';
+      else document.documentElement.dir = 'ltr';
+    }
+
+    // On load: use saved language or default 'en'
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const saved = localStorage.getItem('pp_site_lang') || 'en';
+      // mark siteTitle elements so applyLanguage can find them
+      // We already have elements with data-i18n='siteTitle' (the brand h1)
+      applyLanguage(saved);
+    });
+
+    // show more button: reveal more content or simple behavior (keeps structure simple)
+    showMoreBtn.addEventListener('click', ()=>{
+      // simple behavior: reveal additional 3 cards by duplicating existing ones if any are hidden
+      // For this release: show an alert-like message but keep behavior minimal per your request
+      alert('Show more — will load more sections soon.');
+    });
+
+    // ad button: placeholder (user will add AdSense)
+    adBtn.addEventListener('click', ()=>{
+      // open small window where the publisher can inject AdSense snippet
+      const w = window.open('','pp_ad','width=640,height=420');
+      w.document.write('<div style=\"font-family:Inter,Arial;padding:20px;color:#0b1220\">Ad placeholder. Replace this content with your AdSense ad unit code. <!-- INSERT ADSENSE HERE --> </div>');
+      w.document.title = 'Ad - Mate News';
+    });
+
+    // Accessibility: clicking outside lang list hides it
+    document.addEventListener('click', (e)=>{
+      const target = e.target;
+      if(!langSelector.contains(target) && !langList.contains(target)){
+        hideLangList();
+      }
+    });
+
+    // keep 'Follow us' links in English (they are written in English in markup)
+  </script>
+</body>
+</html>
